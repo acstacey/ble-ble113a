@@ -21,7 +21,7 @@ var util = require('util');
 var async = require('async');
 
 // Instantiate a Bluetooth Controller object. Controls all BLE Central and Peripheral methods (depending on role).
-function BluetoothController(hardware, callback) {
+function BluetoothController(hardware) {//, callback) {
   this.hardware = hardware;
   this.isAdvertising = false;
   this.messenger = new Messenger(hardware);
@@ -55,10 +55,10 @@ function BluetoothController(hardware, callback) {
   this.messenger.on('indicated', this.onIndicated.bind(this));
 
   // Once the messenger says we're ready, call callback and emit event
-  this.messenger.once('ready', callback(true));
+  //this.messenger.once('ready', callback);
 
   // If there was an error, let us know
-  this.messenger.once('error', callback(false));
+  //this.messenger.once('error', callback);
 }
 
 util.inherits(BluetoothController, events.EventEmitter);
@@ -2126,8 +2126,8 @@ BluetoothController.prototype.enableMITMProtection = function(enable, callback) 
 };
 
 // Set the module port of the Bluetooth Low Energy module to initialize
-function use(hardware, callback) {
-  var controller = new BluetoothController(hardware, callback);
+function use(hardware) {//, callback) {
+  var controller = new BluetoothController(hardware);//, callback);
   return controller;
 }
 
