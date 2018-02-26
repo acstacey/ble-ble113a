@@ -63,6 +63,10 @@ function BluetoothController(hardware) {//, callback) {
 
 util.inherits(BluetoothController, events.EventEmitter);
 
+BluetoothController.prototype.verifyComms = function(callback) {
+  this.messenger.verifyCommunication(callback);
+}
+
 BluetoothController.prototype.reset = function(callback) {
   this.messenger.reset(callback);
 };
