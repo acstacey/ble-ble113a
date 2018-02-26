@@ -55,47 +55,13 @@ function BluetoothController(hardware, callback) {
   this.messenger.on('indicated', this.onIndicated.bind(this));
 
   // Once the messenger says we're ready, call callback and emit event
-  this.messenger.once('ready', this.bootSequence.bind(this, callback));
+  this.messenger.once('ready', callback(true));
 
   // If there was an error, let us know
-  this.messenger.once('error', this.bootSequence.bind(this, callback));
+  this.messenger.once('error', callback(false));
 }
 
 util.inherits(BluetoothController, events.EventEmitter);
-
-BluetoothController.prototype.bootSequence = function(callback, err) {
-
-// Tell any ble listeners
-  if (!err) {
-    this.createGPIOs();
-    // Set default adevertising data
-    // LE General Discoverable / BR/EDR not supported
-    // Short device name: Tessel
-    this.setAdvertisingData([0x02, 0x01, 0x06, 0x07, 0x08, 0x54, 0x65, 0x73, 0x73, 0x65, 0x6c], function(){
-      setImmediate(function() {
-        this.emit('ready');
-        // Call the callback
-        if (callback) {
-          callback(null, this);
-        }
-      }.bind(this));
-    }.bind(this));
-  } else {
-    // Emit the error
-    setImmediate(function() {
-      // Call the callback
-      if (callback) {
-        callback(err, this);
-      }
-      else {
-        this.emit('error', err);
-      }
-    }.bind(this));
-  }
-
-  this.messenger.removeAllListeners('error');
-  this.messenger.removeAllListeners('ready');
-};
 
 BluetoothController.prototype.reset = function(callback) {
   this.messenger.reset(callback);
